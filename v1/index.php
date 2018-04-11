@@ -1,7 +1,5 @@
 <?php
 if (PHP_SAPI == 'cli-server') {
-    // To help the built-in PHP dev server, check if the request was actually for
-    // something which should probably be served as a static file
     $url  = parse_url($_SERVER['REQUEST_URI']);
     $file = __DIR__ . $url['path'];
     if (is_file($file)) {
@@ -9,8 +7,10 @@ if (PHP_SAPI == 'cli-server') {
     }
 }
 
+use Slim\Http\Request;
+use Slim\Http\Response;
 require __DIR__ . '/../vendor/autoload.php';
-
+require __DIR__ . '/../DB/dbcon.php';
 session_start();
 
 // Instantiate the app
@@ -26,5 +26,9 @@ require __DIR__ . '/../src/middleware.php';
 // Register routes
 require __DIR__ . '/../src/routes.php';
 
+$app->any("/",function(Request $request,Response $response)
+{
+    return $response->getBody()->write(info());
+});
 // Run app
 $app->run();
