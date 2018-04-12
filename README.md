@@ -1,7 +1,7 @@
 Billion Smile Api
 =
 ## API Table
->Base URL=https://example.com/api
+>Base URL=https://example.com/v1
 
 Route | Method | Key |
 ------|--------|-----|
