@@ -68,6 +68,31 @@
         
     }
 
+    function loginUser($email,$password)
+    { 
+        $pass=md5($password);
+        global $dbcon;
+
+        $stm=$dbcon->prepare("SELECT * FROM `billionsmile_user` WHERE email=? and password=?;");
+        $stm->bind_param("ss",$email,$pass);
+        $stm->execute();
+        $stm->store_result();
+        $num_rows=$stm->num_rows;
+        $stm->close();
+        return $num_rows>0;
+    }
+
+    function getUser($email)
+    {
+        global $dbcon;
+        $stm=$dbcon->prepare("SELECT * FROM `billionsmile_user` WHERE email=?;");
+        $stm->bind_param("s",$email);
+        $stm->execute();
+        $result=$stm->get_result()->fetch_assoc();
+        $stm->close();
+        return $result;
+    }
+
     function isUserExist($email)
     {
         global $dbcon;
@@ -79,6 +104,19 @@
         $stm->close();
         return $num_rows;
     }
+
+    function isUserValid($token)
+    {
+        global $dbcon;
+        $stm=$dbcon->prepare("SELECT `id`, `full_name`, `gender`, `dob`, `image_url`, `email`, `password`, `token` FROM `billionsmile_user` WHERE token=?;");
+        $stm->bind_param("s",$token);
+        $stm->execute();
+        $result=$stm->get_result();
+        $num_rows=$stm->num_rows;
+        $stm->close();
+        return $num_rows>0;
+
+    }
     
     function getApiKey()
     {
@@ -89,6 +127,8 @@
     {
         return (bool) preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $s);
     }
+
+    
 
     function Thumbnail($url, $filename, $width = 150, $height = true) 
     {

@@ -7,6 +7,8 @@ if (PHP_SAPI == 'cli-server') {
     }
 }
 
+use Slim\Http\Request;
+use Slim\Http\Response;
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../DB/dbcon.php';
 session_start();
@@ -21,13 +23,11 @@ require __DIR__ . '/../src/dependencies.php';
 // Register middleware
 require __DIR__ . '/../src/middleware.php';
 
-// Register middleware
-require __DIR__ . '/../src/route.php';
 
+
+$app->get('/',function(Request $request,Response $response){
+    echo "Hello";
+});
 
 // Run app
 $app->run();
-
-
-
-
